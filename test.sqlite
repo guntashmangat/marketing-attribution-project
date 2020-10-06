@@ -1,0 +1,14 @@
+WITH last_touch AS (
+SELECT user_id,
+MAX(timestamp) as last_touch_at
+FROM page_visits
+GROUP BY user_id)
+SELECT pv.utm_campaign as 'campaign',
+COUNT(ft.last_touch_at) as 'number of last touches'
+FROM last_touch ft
+JOIN page_visits pv
+ON ft.user_id = pv.user_id
+AND ft.last_touch_at = pv.timestamp
+WHERE pv.page_name = '4 - purchase'
+GROUP BY 1
+ORDER BY 2 DESC;
